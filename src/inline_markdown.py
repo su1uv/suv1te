@@ -3,6 +3,18 @@ import re
 from textnode import TextNode, TextType
 
 
+def text_to_textnodes(text: str) -> list[TextNode]:
+    nodes: list[TextNode] = [TextNode(text, TextType.PLAIN_TEXT)]
+    nodes = split_nodes_delimiter(nodes, "**", TextType.BOLD_TEXT)
+    print(nodes)
+    nodes = split_nodes_delimiter(nodes, "_", TextType.ITALIC_TEXT)
+    print(nodes)
+    nodes = split_nodes_delimiter(nodes, "`", TextType.CODE_TEXT)
+    nodes = split_nodes_image(nodes)
+    nodes = split_nodes_link(nodes)
+    return nodes
+
+
 def split_nodes_image(old_nodes: list[TextNode]) -> list[TextNode]:
     splitted: list[TextNode] = []
     for node in old_nodes:
@@ -61,8 +73,6 @@ def split_nodes_delimiter(
         if node.text_type != TextType.PLAIN_TEXT:
             new_nodes.append(node)
             continue
-        if delimiter not in node.text and node.text_type == TextType.PLAIN_TEXT:
-            raise Exception("invalid markdown syntax")
 
         splitted_text = node.text.split(delimiter)
         for i, v in enumerate(splitted_text):

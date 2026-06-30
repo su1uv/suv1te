@@ -6,6 +6,7 @@ from inline_markdown import (
     split_nodes_delimiter,
     split_nodes_image,
     split_nodes_link,
+    text_to_textnodes,
 )
 from textnode import TextNode, TextType
 
@@ -251,6 +252,39 @@ class TestInlineMarkdown(unittest.TestCase):
         ]
         result_nodes = split_nodes_delimiter(nodes_to_split, "`", TextType.CODE_TEXT)
         self.assertEqual(result_nodes, splitted_nodes)
+
+    # Test text_to_textnodes
+    def test_text_to_textnodes(self):
+        text = "This is **bold** and _italic_ and `code`"
+        nodes = text_to_textnodes(text)
+        expected_nodes: list[TextNode] = [
+            TextNode("This is ", TextType.PLAIN_TEXT),
+            TextNode("bold", TextType.BOLD_TEXT),
+            TextNode(" and ", TextType.PLAIN_TEXT),
+            TextNode("italic", TextType.ITALIC_TEXT),
+            TextNode(" and ", TextType.PLAIN_TEXT),
+            TextNode("code", TextType.CODE_TEXT),
+        ]
+        self.assertEqual(nodes, expected_nodes)
+
+    def test_text_to_textnodes_with_images_and_links(self):
+        text = "This is **text** with an _italic_ word and a `code block` and an ![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg) and a [link](https://boot.dev)"
+        nodes = text_to_textnodes(text)
+        expected_nodes: list[TextNode] = [
+            TextNode("This is ", TextType.PLAIN_TEXT),
+            TextNode("text", TextType.BOLD_TEXT),
+            TextNode(" with an ", TextType.PLAIN_TEXT),
+            TextNode("italic", TextType.ITALIC_TEXT),
+            TextNode(" word and a ", TextType.PLAIN_TEXT),
+            TextNode("code block", TextType.CODE_TEXT),
+            TextNode(" and an ", TextType.PLAIN_TEXT),
+            TextNode(
+                "obi wan image", TextType.IMAGE, "https://i.imgur.com/fJRm4Vk.jpeg"
+            ),
+            TextNode(" and a ", TextType.PLAIN_TEXT),
+            TextNode("link", TextType.LINK, "https://boot.dev"),
+        ]
+        self.assertEqual(nodes, expected_nodes)
 
 
 if __name__ == "__main__":
