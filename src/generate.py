@@ -7,6 +7,7 @@ from markdown_to_html import extract_title, markdown_to_html_node
 
 
 def generate(public_dir: str, static_dir: str):
+    print(f"deleting {public_dir}...")
     public_dir_abs: str = os.path.abspath(public_dir)
     if os.path.exists(public_dir_abs):
         shutil.rmtree(public_dir_abs)
@@ -15,6 +16,7 @@ def generate(public_dir: str, static_dir: str):
     if not os.path.exists(static_dir_abs):
         raise ValueError("static dir does not exists")
 
+    print(f"ganerating {public_dir}...")
     os.mkdir(public_dir_abs)
 
     cp_static_to_public(public_dir_abs, static_dir_abs)
