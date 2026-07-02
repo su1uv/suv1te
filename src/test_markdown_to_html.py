@@ -1,6 +1,6 @@
 import unittest
 
-from markdown_to_html import markdown_to_html_node
+from markdown_to_html import extract_title, markdown_to_html_node
 
 
 class TestMarkdownToHTML(unittest.TestCase):
@@ -89,21 +89,40 @@ This is a [link](https://www.example.com)
             '<div><p>This is a <a href="https://www.example.com">link</a></p></div>',
         )
 
+    # TODO: Handle images, auto closed tags
 
-# TODO: Handle images, auto closed tags
+    #     def test_paragraphs_with_img(self):
+    #         md = """
+    # This is a ![image](https://www.example.com/image.png)
+    #     """
 
-#     def test_paragraphs_with_img(self):
-#         md = """
-# This is a ![image](https://www.example.com/image.png)
-#     """
+    #         node = markdown_to_html_node(md)
+    #         print(node)
+    #         html = node.to_html()
+    #         self.assertEqual(
+    #             html,
+    #             '<div><p>This is a<img src="https://www.example.com/image.png" alt="image"></p></div>',
+    #         )
 
-#         node = markdown_to_html_node(md)
-#         print(node)
-#         html = node.to_html()
-#         self.assertEqual(
-#             html,
-#             '<div><p>This is a<img src="https://www.example.com/image.png" alt="image"></p></div>',
-#         )
+    def test_extract_title(self):
+        md = """
+# This is a 1 header
+
+## This is a 2 header
+
+### This is a 3 header
+
+#### This is a 4 header
+
+##### This is a 5 header
+
+###### This is a 6 header
+
+this is a paragraph with **bold** text with
+some inline stuff and _italic_ stuff
+        """
+        h1 = extract_title(md)
+        self.assertEqual(h1, "This is a 1 header")
 
 
 if __name__ == "__main__":

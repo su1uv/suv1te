@@ -1,7 +1,17 @@
+import re
+
 from block_markdown import BlockType, block_to_block_type, markdown_to_blocks
 from htmlnode import HTMLNode, ParentNode
 from inline_markdown import text_to_textnodes
 from textnode import TextNode, TextType, text_node_to_html_node
+
+
+def extract_title(markdown: str) -> str:
+    title: list[str] = re.findall(r"(?<!\#)# .*\n", markdown)
+    if not title:
+        raise Exception("missing h1")
+    format_title: str = title[0].rstrip("\n ").lstrip("# ")
+    return format_title
 
 
 def markdown_to_html_node(markdown: str) -> ParentNode:

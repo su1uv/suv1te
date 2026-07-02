@@ -1,13 +1,8 @@
-from textnode import TextNode, TextType
+from generate import generate
 
 
 def main():
-    text_node = TextNode(
-        "This is some anchor text",
-        TextType("link"),
-        "https://www.boot.dev",
-    )
-    print(text_node)
+    generate("./public", "./static")
 
 
 if __name__ == "__main__":
